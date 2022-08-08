@@ -268,6 +268,8 @@ def infoDisk():
 # Asset Information
 # Contents and the timestamp of /home/product_serial 
 # to see when sdp_setup.sh was last run is printed.
+# Copy product_serial from /sys/class/dmi/id/product_serial
+# cp /sys/class/dmi/id/product_serial /home/product_serial ; chmod 444 /home/product_serial
 def infoAsset():
     serialNumber=readFile("/home/product_serial")
     if serialNumber == "Default string":
