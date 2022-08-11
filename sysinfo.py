@@ -8,7 +8,7 @@ System Information Script in Python. If you have any ideas of things that can be
 Nonstandard Libraries to Ubuntu: python3-psutil 
 """
 
-import os, subprocess as sp, psutil as psu, socket as s, time as t, platform as plat, math
+import os, subprocess as sp, psutil as psu, socket as s, time as t, platform as plat, math, cpuinfo
 from posixpath import split
 
 # --------------------------------- #
@@ -134,7 +134,8 @@ def infoSystem():
     productName=readFile("/sys/class/dmi/id/product_name")
     sysVer=readFile("/sys/class/dmi/id/product_version")
     machineType=checkHypervisor()
-    cpuName=os.popen('awk -F\':\' \'/^model name/ {print $2}\' /proc/cpuinfo | uniq | sed -e \'s/^[ \t]*//\'').read()[:-1]
+    # cpuName=os.popen('awk -F\':\' \'/^model name/ {print $2}\' /proc/cpuinfo | uniq | sed -e \'s/^[ \t]*//\'').read()[:-1]
+    cpuName=cpuinfo.get_cpu_info()['brand']
     cpuArch=plat.processor()
     # This gets the number of Cores using lscpu's built in search function.
     cpuCores=os.popen('lscpu -b -p=Core,Socket | grep -v \'^#\' | sort -u | wc -l').read()[:-1]
