@@ -8,4 +8,5 @@ A system info script based on Python, to poll info about a Linux-based system. U
 The sysinfo-raspi.py script is compatible with systems that do not have some dmi class information available. 
 
 ## TODO
-Work around DMI Class info missing on some devices. 
+ - Work around DMI Class info missing on some devices. 
+ - Create a Python Script for use in Windows.  
