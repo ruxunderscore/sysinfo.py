@@ -43,47 +43,6 @@ def diskUsageHigh():
     if int(usage[3]) >= threshold:
         return True
 
-# Get Memory for each GPU and return it.
-def gpuMemory(id):
-    lines=[]
-    for address in id:
-        if address != "": # Checks for Empty Indexes
-            mem=os.popen(f"lspci -v -s {address} | grep Memory").read()[:-1].split("\n")
-            for each in enumerate(mem):
-                if each == "":
-                    each="none"
-                    lines.append(each[1])
-                else:
-                    lines.append(each[1])    
-    return lines
-
-
-# Get kernel driver for each GPU and return it.
-def gpuKernelDriver(id):
-    lines=[]
-    for address in id:
-        if address != "": # Checks for Empty Indexes
-            driver=os.popen(f"lspci -k -s \"{address}\" | grep \"Kernel driver\" | cut -d \":\" -f2").read()[1:-1].split("\n")
-            for each in enumerate(driver):
-                if each[1] == "":
-                    empty="none"
-                    lines.append(empty)
-                else:
-                    lines.append(each[1])          
-    return lines
-
-def gpuKernelMod(id):
-    lines=[]
-    for address in id:
-        if address != "":
-            module=os.popen(f"lspci -k -s \"{address}\" | grep \"Kernel module\" | cut -d \":\" -f2").read()[1:-1]
-            if module == "":
-                empty="none"
-                lines.append(empty)
-            else:
-                lines.append(module)
-    return lines   
-
 # Function to read the time stamp of a file,
 # and return the formatted date.
 def getTimeStamp(path):
@@ -187,41 +146,6 @@ def usageCPUMem():
         print(f"    Swap Usage:                 {swapUse}")
     print(f"    CPU Usage:                  {cpuUse}")
 
-# GPU Information
-# Note: Runs slow, but may be able to convert to external libraries 
-# in the future if requested.
-def infoGPU():
-    gpuID=os.popen("lspci | egrep -i \"Nvidia|Intel|AMD|ATI\" | grep VGA | cut -d \" \" -f1").read().split("\n")
-    gpuInfo=os.popen("lspci | egrep -i \"Nvidia|Intel|AMD|ATI\" | grep VGA | awk -F: \'{print $3}\'").read()[:-1].split("\n")
-    gpuMem=gpuMemory(gpuID)
-    gpuDriver=gpuKernelDriver(gpuID)
-    gpuKernel=gpuKernelMod(gpuID)
-
-    print(f'''
-    {'='*35} GPU/iGPU {'='*35}
-    ''')
-    # Information:                {gpuInfo}''')
-    for index, line in enumerate(gpuInfo):
-        if index == 0:
-            print(f'    Info:                      {line}')
-        else:
-            print(f'                               {line}')
-    for index, line in enumerate(gpuMem):
-        if index == 0:
-            print(f'    Memory:             {line}')
-        else:
-            print(f'                        {line}')
-    for index, line in enumerate(gpuDriver):
-        if index == 0:
-            print(f'    Driver in Use:              {line}')
-        else:
-            print(f'                                {line}')
-    for index, line in enumerate(gpuKernel):
-        if index == 0:
-            print(f'    Kernel:                     {line}')
-        else:
-            print(f'                                {line}')
-
 # MyriadX Information
 def infoMyriad():
     myriadInfo=os.popen("lsusb | grep -o \"Movidius MyriadX\"").read()[:-1]
@@ -301,7 +225,6 @@ def infoFooter():
 def main():
     infoSystem()
     usageCPUMem()
-    infoGPU()
     # Prints Myriad section only if one is present on the system.
     if os.popen("lsusb | grep -o \"Movidius MyriadX\"").read()[:-1] != '':
         infoMyriad()
