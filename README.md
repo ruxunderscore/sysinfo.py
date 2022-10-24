@@ -4,6 +4,9 @@ A system info script based on Python, to poll info about a Linux-based system. U
 ## Dependencies 
 `python3-psutil`
 
+`sudo cp /sys/class/dmi/id/product_serial /home/`
+`sudo chown <username>: /home/product_serial`
+
 ## Raspberry Pi & Systems Without Some DMI Class Info
 The sysinfo-raspi.py script is compatible with systems that do not have some dmi class information available. 
 
